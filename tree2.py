@@ -14,7 +14,7 @@ engine's 30/360 years from settlement.
           probability would be negative, delta is shrunk at that node pair and the node pair is counted
 Discount over step i at a node: exp(-max(alpha_i + x, 0) dT_i) x F_i(s), F_i(s) = the Z-engine discount ratio of
 the step at spread s divided by the Treasury ratio P(T_{i+1}) / P(T_i). With zero volatility and no mean reversion
-the tree is the layer-1 price (callprice.price) exactly (test_tree2.py). s_tot = s_cr + c_ld, c_ld = L + lam_D D
+the tree is the layer-1 price (callprice.price) exactly (test_lattice_synth.py). s_tot = s_cr + c_ld, c_ld = L + lam_D D
 frozen at today's filtered value (T8).
 Grid: every k-th business day after settlement and the last business day on or before maturity. A cash flow is
 credited at the first grid date on or after its date with the factor D_s(T_cf) / D_s(T_grid) at the node's spread
@@ -30,7 +30,7 @@ side per step), so with near-unit daily persistence a 400-step tree carries ~800
 +-(ceil(K sd_cum / dx) + 1) nodes, sd_cum = the factor's sd after the cumulative business days from settlement; a node
 whose branch would leave the range branches inward (centre clamped, probabilities from the same mean and variance,
 negatives clamped and renormalised: exact only to the mass beyond K sd). K = 0 (default) is the full tree, bit for
-bit. Set by the environment variable P26A_TREE_PRUNE_SD (read at import, so spawned workers inherit it).
+bit. Set by the environment variable HYBOND_TREE_PRUNE_SD (read at import, so spawned workers inherit it).
 """
 from __future__ import annotations
 
@@ -44,12 +44,12 @@ import bonds as bondlib
 
 G_MIN = 1e-3     # numerical device (2026-10-11): floor of 1 + (z + x)/2 in the tree's discounting
 import os as _os
-PRUNE_SD = float(_os.environ.get('P26A_TREE_PRUNE_SD', '0'))   # numerical device (2026-11-05): 0 = full tree
+PRUNE_SD = float(_os.environ.get('HYBOND_TREE_PRUNE_SD', '0'))   # numerical device (2026-11-05): 0 = full tree
 
 
 @njit(cache=True)
 def _D(z, x, t):
-    """Z-engine discount factor. Floored base (numerical device, found by run_tree_t5.py 2026-10-11): with a
+    """Z-engine discount factor. Floored base (numerical device, found by a convergence check 2026-10-11): with a
     near-unit-root credit factor the daily tree has far nodes with spreads near -2 (decimal), where the Z-engine base
     1 + (z + x)/2 turns non-positive and the power is NaN; those nodes have probability ~1e-200, but 0 x NaN = NaN
     would spoil the whole price. Below G_MIN the base is floored, which keeps them finite and irrelevant."""
@@ -210,7 +210,7 @@ def _joint(pr0, pr1, pr2, Ea, sda, ps0, ps1, ps2, Eb, sdb, rho, out):
 @njit(cache=True)
 def _callprob(zeta0, zeta1, M, itm_only, dv):
     """call probability over a step: 1 - exp(-lam dv), lam = exp(zeta0 + zeta1 M) (0 when itm_only and M < 0).
-    Numerical guards (found by debug_tree_k1.py 2026-10-11): a step of zero 30/360 length (e.g. the 30th to the 31st)
+    Numerical guards (found by a convergence check 2026-10-11): a step of zero 30/360 length (e.g. the 30th to the 31st)
     has probability 0, and the exponent is capped at 700, so that far nodes (huge W, lam overflowing to inf) never
     give inf x 0 = NaN."""
     if dv <= 0.0 or (itm_only and M < 0.0):
@@ -530,7 +530,7 @@ def fit_ar1(n_h, V_h):
     """(phi, q) of an AR(1) per business day whose variance at the horizons n_h (business days) is closest to V_h in
     log least squares; phi = exp(-th), th on [0, ln 2] (half-life >= 1 business day), log q in closed form given th.
     Search: th = 0 and a log-spaced grid of th in [1e-9, ln 2] (the objective is flat for large th, which defeats a
-    plain golden-section search -- found by test_tree2.py 2026-10-11), then golden section between the grid
+    plain golden-section search -- found by a convergence check 2026-10-11), then golden section between the grid
     neighbours of the best point. Returns (phi, q, th_at_bound)."""
     n_h = np.asarray(n_h, float)
     lv = np.log(np.asarray(V_h, float))

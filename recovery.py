@@ -10,7 +10,7 @@ with the Z engine's conventions (curve.py zero rates z(t), semiannual compoundin
   survival   S(t) = D(t; lam) / D(t; 0),   D(t; x) = (1 + (z(t) + x)/2)^(-2t)      (so S(0) = 1)
   dirty      P(lam, R) = sum_k CF_k D(t_k; lam) + 100 R sum_j D(u_j; 0) [S(u_{j-1}) - S(u_j)]
              u_j = j h (j = 1, 2, ...), the last u at the final cash flow; default paid at the end of each interval
-  R = 0 gives exactly the Z engine's price at spread lam (checked in test_recovery_synth.py), so lam is a
+  R = 0 gives exactly the Z engine's price at spread lam (checked in test_lattice_synth.py), so lam is a
   spread-like intensity.
   h (years) is a numerical integration step and lam_max a numerical search bound. Both are numerical settings
   chosen by a convergence check, and the values in force are WITHHELD: pass them in (see params.template.json).
