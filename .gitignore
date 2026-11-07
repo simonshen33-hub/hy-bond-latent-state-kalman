@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------------------
+# Data. Nothing under data/ is redistributable: the real inputs are licensed
+# (FINRA Enhanced TRACE, a terminal reference-data extract) and the synthetic
+# stand-ins are rebuilt by `python -m synth`. Keep this rule first.
+# ---------------------------------------------------------------------------
+data/
+out/
+*.parquet
+*.npz
+*.pkl
+*.pickle
+*.csv
+*.tsv
+*.feather
+*.h5
+*.dta
+*.sas7bdat
+*.zip
+*.gz
+*.7z
+
+# generated placeholder parameter file (rebuilt by `python -m synth`)
+params.synthetic.json
+
+# estimated parameters -- never commit a fitted vector
+params.json
+params.*.json
+!params.template.json
+!sim_config.template.json
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.Python
+
+# numba / tooling caches
+.numba_cache/
+*.nbi
+*.nbc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# backups left by the private working tree
+*.bak
+*.bak_*
+*.orig

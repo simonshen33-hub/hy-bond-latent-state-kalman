@@ -1,0 +1,25 @@
+{
+  "_notes": "Every null must be filled in. If any entry is null, run_sim refuses to run. The estimated values are withheld.",
+  "spec": {
+    "rows": ["s", "C", "L", "D"],
+    "q_full": null,
+    "h_full": null,
+    "init_of": null,
+    "fixed": {}
+  },
+  "true_params": {
+    "mu_C": null, "mu_L": null, "mu_D": null,
+    "phi_C": null, "phi_L": null, "phi_D": null,
+    "Q_C": null, "Q_L": null, "Q_D": null,
+    "Q_CL": null, "Q_CD": null, "Q_LD": null,
+    "lam_D": null, "gamma": null,
+    "H_s": null, "H_C": null, "H_L": null, "H_D": null
+  },
+  "n_series": null,
+  "n_t": [null],
+  "n_reps": null,
+  "seed": null,
+  "of_source": {"type": "iid_normal", "mean": null, "sd": null},
+  "obs_pattern": {"type": "bernoulli", "prob": {"s": null, "C": null, "L": null, "D": null}},
+  "start": null
+}

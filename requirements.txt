@@ -1,0 +1,12 @@
+# Versions verified importable on the machine this repository was prepared on
+# (CPython 3.11.9, Windows x86-64). Earlier or later minor versions are very
+# likely fine; these are the ones the output in the README was produced with.
+numpy==2.2.4
+scipy==1.15.2
+pandas==2.2.3
+numba==0.61.2
+llvmlite==0.44.0
+
+# only test_ssm.py needs this: it checks ssm.py against an independent
+# implementation of the same filter and smoother.
+statsmodels==0.14.6

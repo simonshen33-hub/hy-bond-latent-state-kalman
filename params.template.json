@@ -1,0 +1,83 @@
+{
+  "_notes": [
+    "Every value here is null. The estimated values are WITHHELD: they are the result of the private project,",
+    "not its method. The structure is what the code needs; fill it in from your own estimation.",
+    "Any null makes a loader refuse to run, as sim_config.template.json already does in this project.",
+    "Units: spreads and spread states in basis points; shock variances q in bp^2 per business day; rate-model",
+    "quantities in decimal per year; lattice factor variances in decimal^2 per business day."
+  ],
+
+  "four_state": {
+    "_shape": "37 parameters, in the order of fourstate4.NAMES",
+    "_rating_curve": "G_t(n) = a + b (n - n0) + c (n - n0)^2, each coefficient an AR(1) with its own mean",
+    "mu_a": null, "mu_b": null, "mu_c": null,
+    "phi_a": null, "phi_b": null, "phi_c": null,
+    "q_a": null, "q_b": null, "q_c": null,
+
+    "_bond_own_part": "B: AR(1), mean 0, starts at 0 on the bond's first trading day",
+    "phi_I": null, "q_I": null,
+    "_permanent_level": "u: no shock; prior variance s2_u, prior mean from the new-issue regression",
+    "s2_u": null,
+
+    "_liquidity": "L: AR(1), mean 0, with three daily measures x_k = al_k + be_k L + e_k, Var(e_k) = h_k",
+    "phi_L": null, "q_L": null,
+    "al1": null, "al2": null, "al3": null,
+    "be1": null, "be2": null, "be3": null,
+    "h1": null, "h2": null, "h3": null,
+
+    "_dealer_inventory": "D: AR(1) driven by customer order flow; lam_D maps it into the spread",
+    "phi_D": null, "q_D": null, "lam_D": null,
+
+    "_trade_level": "bias b_j = g1 + g2 lv (customer buy), g3 + g4 lv (customer sell), 0 otherwise; log R_j = d0 + d1 lv + d2 cust",
+    "g1": null, "g2": null, "g3": null, "g4": null,
+    "d0": null, "d1": null, "d2": null,
+
+    "_issue_observation": "the issue spread observed once, on the bond's first trading day: iss = s + iss_d + e, Var(e) = iss_v",
+    "iss_d": null, "iss_v": null,
+
+    "_issuer_factor": "C_k: AR(1) shared by the issuer's bonds, with a per-bond loading beta",
+    "phi_C": null, "q_C": null
+  },
+
+  "design_constants": {
+    "_notes": "Not estimated, but chosen before any result; the values in force are withheld.",
+    "n0": null,
+    "_n0": "the rating notch the curve is centred on, on the Moody's scale (Aaa = 1 ... C = 21)",
+    "lv_mean": null, "lv_sd": null,
+    "_lv": "mean and s.d. of log par volume used to standardise lv, fixed from the first estimation window",
+    "window_years": null,
+    "_window": "length of the rolling estimation window; re-estimated at each month end"
+  },
+
+  "rate_model": {
+    "_shape": "20 parameters, in the order of afns.NAMES: a shadow-rate arbitrage-free Nelson-Siegel model",
+    "lam": null,
+    "k1": null, "k2": null, "k3": null,
+    "th1": null, "th2": null, "th3": null,
+    "s1": null, "s2": null, "s3": null,
+    "e1": null, "e2": null, "e3": null, "e4": null, "e5": null,
+    "e6": null, "e7": null, "e8": null, "e9": null, "e10": null
+  },
+
+  "lattice": {
+    "_notes": [
+      "The lattice does not estimate these: the rate factor is fitted to the rate model's term variances",
+      "(tree2.fit_ar1 on tree2.afns_short_rate_var) and the credit factor to the four-state model's credit",
+      "variance (tree2.credit_var). rho and the call-intensity coefficients are estimated.",
+      "The inversion tree and the prediction tree must use the SAME values -- see oas_obs.py."
+    ],
+    "phr": null, "qr": null,
+    "phs": null, "qs": null,
+    "rho": null,
+    "zeta0": null, "zeta1": null,
+    "step": null,
+    "_step": "business days per lattice step; a numerical setting chosen by a convergence check"
+  },
+
+  "recovery": {
+    "_notes": "recovery of face value by payment-rank group (recovery.GROUPS), per estimation window",
+    "R_secured": null, "R_senior_unsecured": null, "R_junior": null,
+    "h_step": null, "lam_max": null,
+    "_numerics": "h_step is the integration step in years and lam_max the search bound; numerical settings"
+  }
+}
